@@ -5,7 +5,7 @@ public class Result<T> {
     private String msg;
     private T data;
 
-    public Result success(T data){
+    public static <T> Result success(T data){
         return new Result(data);
     }
 
