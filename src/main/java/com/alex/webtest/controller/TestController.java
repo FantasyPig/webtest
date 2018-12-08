@@ -3,7 +3,8 @@ package com.alex.webtest.controller;
 import com.alex.webtest.redis.RedisService;
 import com.alex.webtest.redis.UserPrefix;
 import com.alex.webtest.result.Result;
-import org.apache.catalina.User;
+import com.alex.webtest.service.UserService;
+import com.alex.webtest.utils.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,9 @@ public class TestController {
 
     @Autowired
     RedisService redisService;
+
+    @Autowired
+    UserService userService;
 
     @RequestMapping("/hello")
     @ResponseBody
@@ -40,4 +44,16 @@ public class TestController {
         return Result.success(s);
     }
 
+    @RequestMapping("/mybatis/get")
+    @ResponseBody
+    public Result<User> testMybatisGet(){
+        User user = userService.getById();
+        return Result.success(user);
+    }
+
+    @RequestMapping("/mybatis/add")
+    @ResponseBody
+    public Result<Boolean> testMybatisAdd(){
+        return Result.success(userService.addUser());
+    }
 }

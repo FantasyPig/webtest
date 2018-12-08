@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.List;
+
 @Service
 public class RedisService {
 
@@ -21,7 +23,7 @@ public class RedisService {
             T value = stringToBean(valueStr, clazz);
             return value;
         } finally {
-            jedis.close();
+            returnToPool(jedis);
         }
     }
 
@@ -31,11 +33,37 @@ public class RedisService {
             jedis = jedisPool.getResource();
             String realKey = prefix.getPrefix() + key;
             String valueStr = beanToString(value);
-            jedis.set(realKey, valueStr);
+            String result = jedis.set(realKey, valueStr);
+            if(result == null){
+                return false;
+            } else{
+                return true;
+            }
+        } finally {
+            returnToPool(jedis);
+        }
+    }
+
+    public boolean exists(KeyPrefix prefix, String key){
+        Jedis jedis = null;
+        try{
+            jedis = jedisPool.getResource();
+            String realKey = prefix.getPrefix() + key;
+            return jedis.exists(realKey);
         } finally {
             jedis.close();
         }
-        return false;
+    }
+
+    public boolean delete(KeyPrefix prefix, String key){
+        Jedis jedis = null;
+        try{
+            jedis = jedisPool.getResource();
+            String realKey = prefix.getPrefix() + key;
+            return jedis.del(realKey) > 0 ? true : false;
+        } finally {
+            returnToPool(jedis);
+        }
     }
 
     private <T> String beanToString(T value){
@@ -62,8 +90,17 @@ public class RedisService {
             return (T) str;
         } else if (clazz == long.class || clazz == Long.class){
             return (T) Long.valueOf(str);
+        } else if (clazz == List.class){
+            //unchecked
+            return JSON.toJavaObject(JSON.parseArray(str), clazz);
         } else{
             return JSON.toJavaObject(JSON.parseObject(str), clazz);
+        }
+    }
+
+    private void returnToPool(Jedis jedis){
+        if(jedis != null){
+            jedis.close();
         }
     }
 
