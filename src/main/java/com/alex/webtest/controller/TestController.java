@@ -51,9 +51,14 @@ public class TestController {
         return Result.success(user);
     }
 
-    @RequestMapping("/mybatis/add")
-    @ResponseBody
-    public Result<Boolean> testMybatisAdd(){
-        return Result.success(userService.addUser());
+    @RequestMapping("/login")
+    public String testLogin(){
+        return "login";
     }
+
+//    @RequestMapping("/mybatis/add")
+//    @ResponseBody
+//    public Result<Boolean> testMybatisAdd(){
+//        return Result.success(userService.addUser());
+//    }
 }

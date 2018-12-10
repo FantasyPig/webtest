@@ -12,14 +12,14 @@ public class UserService {
     UserDao dao;
 
     public User getById(){
-        User user1 = dao.getById(1);
+        User user1 = dao.getById(12345678900L);
         return user1;
     }
 
-    public int addUser(){
-        User user2 = new User();
-        user2.setId(2);
-        user2.setName("user2");
-        return dao.insert(user2);
-    }
+//    public int addUser(){
+//        User user2 = new User();
+//        user2.setId(13377775453L);
+//        user2.setName("user2");
+//        return dao.insert(user2);
+//    }
 }
