@@ -9,6 +9,10 @@ public class Result<T> {
         return new Result(data);
     }
 
+    public static <T> Result error(CodeMsg codeMsg){
+        return new Result(codeMsg);
+    }
+
     private Result(T data) {
         this.data = data;
     }
@@ -21,6 +25,13 @@ public class Result<T> {
 
     public int getCode() {
         return code;
+    }
+
+    public Result(CodeMsg codeMsg){
+        if(codeMsg != null){
+            this.code = codeMsg.getCode();
+            this.msg = codeMsg.getMsg();
+        }
     }
 
     public void setCode(int code) {

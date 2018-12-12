@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -47,7 +46,7 @@ public class TestController {
     @RequestMapping("/mybatis/get")
     @ResponseBody
     public Result<User> testMybatisGet(){
-        User user = userService.getById();
+        User user = userService.getById(1L);
         return Result.success(user);
     }
 
